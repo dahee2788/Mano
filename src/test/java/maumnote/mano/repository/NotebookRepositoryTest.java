@@ -2,7 +2,6 @@ package maumnote.mano.repository;
 
 import maumnote.mano.domain.Notebook;
 import jakarta.transaction.Transactional;
-import maumnote.mano.ManoApplication;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;

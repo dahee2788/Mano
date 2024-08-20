@@ -14,11 +14,11 @@ public class NotebookService {
     private NotebookRepository notebookRepository;
 
     /* 일기장 저장 */
-    public ResponseNotebookDto save(RequestNotebookDto RequestNotebookDto) {
+    public ResponseNotebookDto save(RequestNotebookDto requestNotebookDto) {
         ResponseNotebookDto notebook;
         try {
             Notebook requestNotebook = Notebook.builder()
-                    .name(RequestNotebookDto.getName())
+                    .name(requestNotebookDto.getName())
                     .createId("system")
                     .updateId("system")
                     .build();
