@@ -18,9 +18,7 @@ class NotebookServiceTest {
     @Test
     void save() {
         // given
-        RequestNotebookDto dto = RequestNotebookDto.builder()
-                .name("하이")
-                .build();
+        RequestNotebookDto dto = RequestNotebookDto.builder().name("하이").build();
         // when
         ResponseNotebookDto responseNotebookDto = notebookService.save(dto);
         // then

@@ -28,10 +28,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         // 에러 메시지 수집
-        StringBuilder errorMessage = new StringBuilder();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
-            errorMessage.append(error.getDefaultMessage()).append("; ");
-        });
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.VALIDATION_ERROR, errorMessage.toString()), HttpStatus.BAD_REQUEST);
+        String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        return new ResponseEntity<>(new ErrorResponse(ErrorCode.VALIDATION_ERROR, errorMessage), HttpStatus.BAD_REQUEST);
     }
 }

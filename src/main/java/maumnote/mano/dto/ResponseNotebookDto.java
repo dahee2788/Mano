@@ -9,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @ToString(callSuper = true)
-@NoArgsConstructor
 public class ResponseNotebookDto extends BaseEntity {
     private Long id;
     private String name;
