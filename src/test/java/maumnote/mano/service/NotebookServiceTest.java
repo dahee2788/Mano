@@ -16,11 +16,11 @@ class NotebookServiceTest {
     private NotebookService notebookService;
 
     @Test
-    void save() {
+    void create() {
         // given
         RequestNotebookDto dto = RequestNotebookDto.builder().name("하이").build();
         // when
-        ResponseNotebookDto responseNotebookDto = notebookService.save(dto);
+        ResponseNotebookDto responseNotebookDto = notebookService.create(dto);
         // then
         System.out.println(responseNotebookDto.toString());
         Assertions.assertNotNull(responseNotebookDto);

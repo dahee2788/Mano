@@ -31,6 +31,14 @@ public class Notebook extends BaseEntity{
                 .updateId("system")
                 .build();
     }
+    public static Notebook fromRequestDto(long id , RequestNotebookDto dto){
+        return Notebook.builder()
+                .id(id)
+                .name(dto.getName())
+                .createId("system")
+                .updateId("system")
+                .build();
+    }
     public static ResponseNotebookDto toResponseDto(Notebook notebook){
         return ResponseNotebookDto.builder()
                 .id(notebook.getId())
