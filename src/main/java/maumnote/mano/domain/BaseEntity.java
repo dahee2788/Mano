@@ -3,13 +3,14 @@ package maumnote.mano.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-@Data
+
+@Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

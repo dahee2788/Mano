@@ -28,6 +28,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation ("javax.validation:validation-api:2.0.1.Final") // 또는 최신 버전
+    implementation ("org.hibernate.validator:hibernate-validator:6.2.0.Final") // 또는 최신 버전
+    implementation ("org.glassfish:javax.el:3.0.0") // EL API
+    implementation ("org.springframework.boot:spring-boot-starter-validation")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
