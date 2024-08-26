@@ -34,12 +34,12 @@ public class NotebookController {
     }
 
     @PatchMapping("/notebook/{notebookId}")
-    ApiResponse<ResponseNotebookDto> updateNotebook (@PathVariable("notebookId") long notebookId, @RequestBody @Valid RequestNotebookDto notebookDto) {
+    ApiResponse<ResponseNotebookDto> updateNotebook (@PathVariable("notebookId") long notebookId, @RequestBody @Valid RequestNotebookDto notebookDto) throws Exception{
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_UPDATE_SUCCESS, notebookService.update(notebookId,notebookDto));
     }
 
-    @PatchMapping("/notebook/{notebookId}")
+    @DeleteMapping("/notebook/{notebookId}")
     ApiResponse<?> deleteNotebook (@PathVariable("notebookId") long notebookId) {
 
         notebookService.delete(notebookId);

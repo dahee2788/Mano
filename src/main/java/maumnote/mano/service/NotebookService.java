@@ -50,6 +50,8 @@ public class NotebookService {
 
     /* 일기장 삭제 */
     public void delete(long id){
+
+        // 리턴형이 void인 메소드에 대해서 검증하는 방법..?
         notebookRepository.deleteById(id);
     }
 
