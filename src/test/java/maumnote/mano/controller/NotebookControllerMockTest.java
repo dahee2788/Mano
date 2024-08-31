@@ -3,13 +3,13 @@ package maumnote.mano.controller;
 import maumnote.mano.dto.RequestNotebookDto;
 import maumnote.mano.dto.ResponseNotebookDto;
 import maumnote.mano.exception.ErrorCode;
-import maumnote.mano.global.ResponseMessage;
 import maumnote.mano.service.NotebookService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -68,13 +68,14 @@ class NotebookControllerMockTest {
                 .contentType("application/json")
                 .content(jsonRequest))
                 .andDo(print())
-                /* json 데이터가 왜 null로 넘어오는지 모르겠음..!*/
+                /* json 데이터가 왜 null로 넘어오는지 모르겠음..! => ErrorResponse @getter가 없어서 접근 불가 */
                 .andExpect(jsonPath("$.errorCode").value(ErrorCode.VALIDATION_ERROR.name()))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     @DisplayName("일기장 조회 성공")
+    @WithMockUser("testUser")
     void getNotebooksOk() throws Exception {
         ResponseNotebookDto ResponseNotebook1 = ResponseNotebookDto.builder()
                 .id(1234L)

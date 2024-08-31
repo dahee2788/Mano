@@ -34,7 +34,7 @@ public class NotebookController {
     }
 
     @PatchMapping("/notebook/{notebookId}")
-    ApiResponse<ResponseNotebookDto> updateNotebook (@PathVariable("notebookId") long notebookId, @RequestBody @Valid RequestNotebookDto notebookDto) throws Exception{
+    ApiResponse<ResponseNotebookDto> updateNotebook (@PathVariable("notebookId") long notebookId, @RequestBody @Valid RequestNotebookDto notebookDto) {
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_UPDATE_SUCCESS, notebookService.update(notebookId,notebookDto));
     }
