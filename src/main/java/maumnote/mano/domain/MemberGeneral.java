@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import maumnote.mano.dto.RequestCreateGeneralMemberDto;
+import maumnote.mano.dto.RequestGeneralMemberMainDto;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
@@ -28,19 +28,22 @@ public class MemberGeneral extends BaseEntity{
     @JoinColumn(name="member_id")
     private Member member;
 
-    public static MemberGeneral fromDto(RequestCreateGeneralMemberDto requestCreateGeneralMemberDto, Member member) {
+    public static MemberGeneral fromDto(RequestGeneralMemberMainDto requestGeneralMemberMainDto, Member member) {
 
         return MemberGeneral.builder()
-                   .email(requestCreateGeneralMemberDto.getEmail())
-                   .password(encodePassword(requestCreateGeneralMemberDto.getPassword()))
+                   .email(requestGeneralMemberMainDto.getEmail())
+                   .password(encodePassword(requestGeneralMemberMainDto.getPassword()))
                    .member(member)
+                   .createId("system")
+                   .updateId("system")
                    .build();
     }
 
     // BCryptPasswordEncoder 사용
     public static String encodePassword(String password) {
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-         return encoder.encode(password);
+        return encoder.encode(password);
     }
 
 

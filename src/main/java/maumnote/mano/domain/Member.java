@@ -27,7 +27,12 @@ public class Member extends BaseEntity {
     private LocalDateTime withdrawalDate;
 
     public static Member newMember(){
-        return Member.builder().id(createMemberId()).build();
+        return Member.builder()
+                .id(createMemberId())
+                .joinDate(LocalDateTime.now())
+                .createId("system")
+                .updateId("system")
+                .build();
     }
 
     public static String createMemberId(){

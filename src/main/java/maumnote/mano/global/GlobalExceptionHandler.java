@@ -6,11 +6,15 @@ import maumnote.mano.exception.ErrorCode;
 import maumnote.mano.exception.ManoCustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice
@@ -46,5 +50,20 @@ public class GlobalExceptionHandler {
         log.error("MethodArgumentTypeMismatchException : {}", errorMessage.toString());
 
         return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_FORMAT, errorMessage.toString()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex) {
+
+        log.error("NoSuchElementException : {}", ex.getMessage());
+
+        return new ResponseEntity<>(new ErrorResponse(ErrorCode.ELEMENT_NOT_FOUND, ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorResponse> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException ex) {
+        log.error("SQLIntegrityConstraintViolationException : {}", ex.getMessage());
+        return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_FORMAT, ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
