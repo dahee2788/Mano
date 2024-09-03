@@ -37,7 +37,8 @@ public class LoginService implements UserDetailsService {
 
         MemberGeneral generalAccount = memberGeneral.get();
 
-        // 롤 생성
+        // 롤 생성 - 만약 특정 key면 관리자권한 주고, 일반이면 일반 권한 주고 이런건가요?
+        // 보통 userDetail을 쓰던데
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 

@@ -10,7 +10,10 @@ public enum ErrorCode {
     INVALID_FORMAT("잘못된 형식"),
     JOIN_FAIL("회원가입에 실패하였습니다. 다시 시도해 주세요."),
     GENERAL_LOGIN_FAIL("로그인에 실패하였습니다. 이메일 주소 또는 비밀번호를 확인해 주세요."),
-    ELEMENT_NOT_FOUND("해당 요소가 존재하지 않습니다.");
+    ELEMENT_NOT_FOUND("해당 요소가 존재하지 않습니다."),
+    DATA_INTEGRITY_ERROR("데이터의 무결성 제약 조건이 위반되었습니다."),
+    EMPTY_REQUEST_BODY("빈 요청 본문"),
+    UNKNOWN_ERROR("알 수 없는 오류가 발생했습니다.");
 
     private final String message;
 

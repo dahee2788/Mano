@@ -1,6 +1,8 @@
 package maumnote.mano.global;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import maumnote.mano.dto.ApiResponse;
 import maumnote.mano.dto.ErrorResponse;
 import maumnote.mano.exception.ErrorCode;
 import maumnote.mano.exception.ManoCustomException;
@@ -20,50 +22,60 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ManoCustomException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponse> handleManoCustomException(ManoCustomException e) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exception(Exception e, Throwable throwable, HttpServletRequest request) {
+        // 보통 Throwable 에서는 어떤 값을 출력해보는지?
+        ResponseEntity<ErrorResponse> errorResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(ErrorCode.UNKNOWN_ERROR,e.getMessage()));
+        log.error(e.getMessage());
+        log.error(throwable.getMessage());
+        StackTraceElement[] stackTrace = e.getStackTrace();
 
-        log.error("ManoCustomException : {}", e.getMessage());
+        // 최대 3줄만 출력
+        for (int i = 0; i < Math.min(3, stackTrace.length); i++) {
+            log.error(String.valueOf(stackTrace[i]));
+        }
 
-        return new ResponseEntity<>(new ErrorResponse(e.getErrorCode(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+        log.error("호출 url : {}", request.getRequestURI());
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        if( e instanceof ManoCustomException){
 
-        // 에러 메시지 수집
-        String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        log.error("MethodArgumentNotValidException : {}", errorMessage);
+            log.error("ManoCustomException : {}", e.getMessage());
+            errorResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(((ManoCustomException) e).getErrorCode(),e.getMessage()));
+        }
+        if( e instanceof MethodArgumentNotValidException){
 
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.VALIDATION_ERROR, errorMessage), HttpStatus.BAD_REQUEST);
-    }
+            // 에러 메시지 수집
+            String errorMessage = ((MethodArgumentNotValidException)e).getBindingResult().getAllErrors().get(0).getDefaultMessage();
+            log.error("MethodArgumentNotValidException : {}", errorMessage);
+            errorResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ErrorCode.VALIDATION_ERROR, errorMessage));
+        }
+        if( e instanceof MethodArgumentTypeMismatchException){
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchExceptions(MethodArgumentTypeMismatchException ex) {
+            StringBuilder errorMessage = new StringBuilder("["+((MethodArgumentTypeMismatchException)e).getName()+"] 잘못된 요청입니다.");
+            errorMessage.append("\n"+e.getMessage());
+            // 에러 메시지 수집
+            log.error("MethodArgumentTypeMismatchException : {}", errorMessage.toString());
 
-        StringBuilder errorMessage = new StringBuilder("["+ex.getName()+"] 잘못된 요청입니다.");
-        errorMessage.append("\n"+ex.getMessage());
-        // 에러 메시지 수집
-        log.error("MethodArgumentTypeMismatchException : {}", errorMessage.toString());
+            errorResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ErrorCode.INVALID_FORMAT, errorMessage.toString()));
+        }
+        if( e instanceof NoSuchElementException){
 
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_FORMAT, errorMessage.toString()), HttpStatus.BAD_REQUEST);
-    }
+            log.error("NoSuchElementException : {}", e.getMessage());
+            errorResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(ErrorCode.ELEMENT_NOT_FOUND, e.getMessage()));
+        }
+        if( e instanceof SQLIntegrityConstraintViolationException){
 
-    @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex) {
+            log.error("SQLIntegrityConstraintViolationException : {}", e.getMessage());
+            errorResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(ErrorCode.DATA_INTEGRITY_ERROR, e.getMessage()));
+        }
+        if( e instanceof HttpMessageNotReadableException){
 
-        log.error("NoSuchElementException : {}", ex.getMessage());
+            log.error("HttpMessageNotReadableException : {}", e.getMessage());
+            errorResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ErrorCode.EMPTY_REQUEST_BODY, e.getMessage()));
+        }
 
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.ELEMENT_NOT_FOUND, ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponse> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException ex) {
-        log.error("SQLIntegrityConstraintViolationException : {}", ex.getMessage());
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_FORMAT, ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return errorResponse;
+
     }
 }

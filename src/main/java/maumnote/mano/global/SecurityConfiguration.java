@@ -45,7 +45,7 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/","/member","/login").permitAll() // 권한없이 접근 가능
+                authorize.requestMatchers("/","/member","/login","/notebook").permitAll() // 권한없이 접근 가능 => 접근을 풀어야하는 화면은 이렇게 string으로 줄줄이 써야하는지?
                         .anyRequest().authenticated() // 그 외의 요청은 권한 필요
         ).httpBasic(withDefaults()); // 기본 인증 설정
 
