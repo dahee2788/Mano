@@ -1,11 +1,11 @@
-package maumnote.mano.global;
+package maumnote.mano.global.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import maumnote.mano.global.login.LoginService;
-import maumnote.mano.global.login.MemberAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Collections;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration // 설정 관련된 파일이라는 어노테이션
@@ -21,20 +23,19 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final LoginService loginService;
-
+    private final MemberAuthenticationProvider memberAuthenticationProvider;
+    private final TokenProvider tokenProvider;
+    private final ObjectMapper objectMapper;
 
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder =
-                http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(loginService).passwordEncoder(passwordEncoder());
-        return authenticationManagerBuilder.build();
+    public AuthenticationManager authManager() throws Exception {
+        // AuthenticationManager에 provider를 설정
+        return new ProviderManager(Collections.singletonList(memberAuthenticationProvider));
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AuthenticationSuccessService getAuthenticationsuccessservice() throws Exception {
+        // AuthenticationManager에 provider를 설정
+        return new AuthenticationSuccessService(tokenProvider, objectMapper);
     }
 
     // 시큐리티 5.7.0-M2 부터 WebSecurityConfigurerAdapter 사용되지 않음
@@ -42,20 +43,17 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http , AuthenticationManager authManager) throws Exception {
 
         // 페이지 권한 - 주소에 대한 권한설정
-        http
-                .csrf(csrf->csrf.disable())
-                .authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/","/member","/login","/notebook").permitAll() // 권한없이 접근 가능 => 접근을 풀어야하는 화면은 이렇게 string으로 줄줄이 써야하는지?
-                        .anyRequest().authenticated() // 그 외의 요청은 권한 필요
-        ).httpBasic(withDefaults()); // 기본 인증 설정
+        http.csrf(csrf->csrf.disable())
+            .authorizeHttpRequests(authorize -> authorize.requestMatchers("/","/join","/login").permitAll() // 권한없이 접근 가능 => 접근을 풀어야하는 화면은 이렇게 string으로 줄줄이 써야하는지?
+             .anyRequest().authenticated()) // 그 외의 요청은 권한 필요
+            .httpBasic(withDefaults()); // 기본 인증 설정
+
 
         // 커스텀 필터 추가
-        http.addFilterBefore(new MemberAuthenticationFilter(authManager), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new MemberAuthenticationFilter(authManager, getAuthenticationsuccessservice()), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 
     }
-
-
 }
 

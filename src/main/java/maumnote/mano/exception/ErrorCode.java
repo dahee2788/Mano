@@ -13,6 +13,7 @@ public enum ErrorCode {
     ELEMENT_NOT_FOUND("해당 요소가 존재하지 않습니다."),
     DATA_INTEGRITY_ERROR("데이터의 무결성 제약 조건이 위반되었습니다."),
     EMPTY_REQUEST_BODY("빈 요청 본문"),
+    EXPIRED_TOKEN("토큰이 만료되었습니다."),
     UNKNOWN_ERROR("알 수 없는 오류가 발생했습니다.");
 
     private final String message;

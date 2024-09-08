@@ -51,10 +51,10 @@ class MemberServiceTest {
                         .build());
 
         // when
-        boolean result = memberService.createGeneralMember(new RequestGeneralMemberMainDto("test@test.com", "test"));
+        String result = memberService.createGeneralMember(new RequestGeneralMemberMainDto("test@test.com", "test"));
 
         // then
-        assertTrue(result);
+        assertNotNull(result);
     }
 
     @Test

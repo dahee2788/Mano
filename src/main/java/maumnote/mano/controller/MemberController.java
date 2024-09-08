@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.security.sasl.AuthenticationException;
+
 @RestController
 public class MemberController {
 
@@ -20,9 +22,14 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/member")
-    public ApiResponse<Boolean> joinGeneralMember(@Valid @RequestBody RequestGeneralMemberMainDto requestGeneralMemberMainDto) {
+    @PostMapping("/join")
+    public ApiResponse<String> joinGeneralMember(@Valid @RequestBody RequestGeneralMemberMainDto requestGeneralMemberMainDto) {
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.MEMBER_CREATE_SUCCESS,memberService.createGeneralMember(requestGeneralMemberMainDto));
+    }
+    @PostMapping("/login")
+    public ApiResponse<String> loginGeneralMember(@Valid @RequestBody RequestGeneralMemberMainDto requestGeneralMemberMainDto) throws AuthenticationException {
+
+        return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.LOGIN_SUCCESS,memberService.authentication(requestGeneralMemberMainDto));
     }
 }

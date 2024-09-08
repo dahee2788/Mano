@@ -1,5 +1,6 @@
 package maumnote.mano.global;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import maumnote.mano.dto.ApiResponse;
@@ -9,6 +10,7 @@ import maumnote.mano.exception.ManoCustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -72,6 +74,16 @@ public class GlobalExceptionHandler {
 
             log.error("HttpMessageNotReadableException : {}", e.getMessage());
             errorResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ErrorCode.EMPTY_REQUEST_BODY, e.getMessage()));
+        }
+        if( e instanceof ExpiredJwtException){
+
+            log.error("ExpiredJwtException : {}", e.getMessage());
+            errorResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(ErrorCode.EXPIRED_TOKEN, e.getMessage()));
+        }
+        if( e instanceof AuthenticationException){
+
+            log.error("AuthenticationException : {}", e.getMessage());
+            errorResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(ErrorCode.GENERAL_LOGIN_FAIL, e.getMessage()));
         }
 
 
