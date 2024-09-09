@@ -20,6 +20,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -35,6 +36,7 @@ class NotebookControllerMockTest {
 
     @Test
     @DisplayName("일기장 저장 성공")
+    @WithMockUser("testUser")
     public void createOk() throws Exception {
 
         // given
@@ -47,6 +49,7 @@ class NotebookControllerMockTest {
         // when
         // then
         mockMvc.perform(post("/notebook")
+                        .with(csrf())
                 .contentType("application/json")
                 .content(jsonRequest))
                 .andDo(print())
@@ -57,6 +60,7 @@ class NotebookControllerMockTest {
     }
     @Test
     @DisplayName("일기장 저장 실패")
+    @WithMockUser("testUser")
     public void create400Fail() throws Exception {
 
         // given
@@ -65,6 +69,7 @@ class NotebookControllerMockTest {
         // when
         // then
         mockMvc.perform(post("/notebook")
+                        .with(csrf())
                 .contentType("application/json")
                 .content(jsonRequest))
                 .andDo(print())
@@ -101,6 +106,7 @@ class NotebookControllerMockTest {
 
     @Test
     @DisplayName("일기장 수정 성공")
+    @WithMockUser("testUser")
     void updateNotebookOk() throws Exception {
 
         // given
@@ -114,6 +120,7 @@ class NotebookControllerMockTest {
         // when
         // then
         mockMvc.perform(patch("/notebook/"+pathParameter)
+                        .with(csrf())
                 .contentType("application/json")
                 .content(jsonRequest))
                 .andDo(print())
@@ -123,6 +130,7 @@ class NotebookControllerMockTest {
 
     @Test
     @DisplayName("일기장 수정 실패")
+    @WithMockUser("testUser")
     void updateNotebook400Fail() throws Exception {
 
         // given
@@ -132,6 +140,7 @@ class NotebookControllerMockTest {
         // when
         // then
         mockMvc.perform(patch("/notebook/" + pathParameter)
+                        .with(csrf())
                 .contentType("application/json")
                 .content(jsonRequest))
                 .andDo(print())
@@ -141,6 +150,7 @@ class NotebookControllerMockTest {
 
     @Test
     @DisplayName("일기장 삭제 성공")
+    @WithMockUser("testUser")
     void deleteNotebookOk() throws Exception{
 
         // given
@@ -148,7 +158,8 @@ class NotebookControllerMockTest {
 
         // when
         // then
-        mockMvc.perform(delete("/notebook/"+pathParameter))
+        mockMvc.perform(delete("/notebook/"+pathParameter)
+                        .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk());
         verify(notebookService,times(1)).delete(pathParameter);
@@ -156,6 +167,7 @@ class NotebookControllerMockTest {
 
     @Test
     @DisplayName("일기장 삭제 실패")
+    @WithMockUser("testUser")
     void deleteNotebook400Fail() throws Exception{
 
         // given
@@ -163,7 +175,8 @@ class NotebookControllerMockTest {
 
         // when
         // then
-        mockMvc.perform(delete("/notebook/"+pathParameter))
+        mockMvc.perform(delete("/notebook/"+pathParameter)
+                        .with(csrf()))
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.errorCode").value(ErrorCode.INVALID_FORMAT.name()));

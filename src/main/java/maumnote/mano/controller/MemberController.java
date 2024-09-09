@@ -27,9 +27,4 @@ public class MemberController {
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.MEMBER_CREATE_SUCCESS,memberService.createGeneralMember(requestGeneralMemberMainDto));
     }
-    @PostMapping("/login")
-    public ApiResponse<String> loginGeneralMember(@Valid @RequestBody RequestGeneralMemberMainDto requestGeneralMemberMainDto) throws AuthenticationException {
-
-        return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.LOGIN_SUCCESS,memberService.authentication(requestGeneralMemberMainDto));
-    }
 }

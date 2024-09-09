@@ -59,16 +59,4 @@ public class MemberService implements UserDetailsService {
 
       return memberGeneral.get();
     }
-
-    public String authentication(RequestGeneralMemberMainDto requestGeneralMemberMainDto) throws AuthenticationException {
-
-        MemberGeneral member =   this.memberGeneralRepository.findByEmail(requestGeneralMemberMainDto.getEmail())
-                .orElseThrow(() -> new AuthenticationException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage()));
-
-        if(!MemberGeneral.matchPassword(requestGeneralMemberMainDto.getPassword(), member.getPassword())){
-            throw new AuthenticationException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage());
-        }
-
-        return member.getMember().getId();
-    }
 }
