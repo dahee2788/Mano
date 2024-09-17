@@ -9,6 +9,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -24,6 +25,7 @@ public class SecurityConfiguration {
     private final MemberAuthenticationProvider memberAuthenticationProvider;
     private final TokenProvider tokenProvider;
     private final ObjectMapper objectMapper;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public AuthenticationManager authManager() throws Exception {
@@ -36,13 +38,14 @@ public class SecurityConfiguration {
 
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorize -> authorize.requestMatchers("/", "/join", "/login").permitAll() // 권한없이 접근 가능 => 접근을 풀어야하는 화면은 이렇게 string으로 줄줄이 써야하는지?
                         .anyRequest().authenticated()) // 그 외의 요청은 권한 필요
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // jwt토큰방식으로 진행할거라 세션에 상태정보를 저장하지 않는 stateless로
                 .httpBasic(withDefaults());
 
         MemberAuthenticationFilter filter = new MemberAuthenticationFilter(authManager);
         filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(tokenProvider, objectMapper));
         filter.setAuthenticationFailureHandler(new LoginFailureHandler(objectMapper));
-
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 

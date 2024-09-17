@@ -53,4 +53,8 @@ public class MemberService implements UserDetailsService {
         return memberGeneralRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage()));
 
     }
+
+    public UserDetails loadUserById(String id) {
+        return memberRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage()));
+    }
 }
