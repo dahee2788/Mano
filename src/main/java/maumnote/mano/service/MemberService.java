@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import javax.security.sasl.AuthenticationException;
-import java.util.Optional;
-
 @Service
 public class MemberService implements UserDetailsService {
 
@@ -33,17 +30,19 @@ public class MemberService implements UserDetailsService {
     public String createGeneralMember(RequestGeneralMemberMainDto requestGeneralMemberMainDto) {
 
         String result;
-        Member member = Member.newMember();
+        Member member = Member.createNewMember();
 
-        if(!ObjectUtils.isEmpty(memberRepository.save(member))){
+        if (!ObjectUtils.isEmpty(memberRepository.save(member))) {
             MemberGeneral newMemberGeneral = memberGeneralRepository.save(MemberGeneral.fromDto(requestGeneralMemberMainDto, member));
 
-            if(!ObjectUtils.isEmpty(newMemberGeneral)){
+            if (!ObjectUtils.isEmpty(newMemberGeneral)) {
                 result = member.getId();
+            } else {
+                throw new ManoCustomException(ErrorCode.JOIN_FAIL);
             }
-            else throw new ManoCustomException(ErrorCode.JOIN_FAIL);
+        } else {
+            throw new ManoCustomException(ErrorCode.JOIN_FAIL);
         }
-        else throw new ManoCustomException(ErrorCode.JOIN_FAIL);
 
         return result;
     }
@@ -51,12 +50,7 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<MemberGeneral> memberGeneral =  memberGeneralRepository.findByEmail(username);
+        return memberGeneralRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage()));
 
-        if (memberGeneral.isEmpty()) {
-            throw new UsernameNotFoundException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage());
-        }
-
-      return memberGeneral.get();
     }
 }

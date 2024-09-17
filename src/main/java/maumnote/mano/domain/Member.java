@@ -1,6 +1,7 @@
 package maumnote.mano.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class Member extends BaseEntity {
     private LocalDateTime joinDate;
     private LocalDateTime withdrawalDate;
 
-    public static Member newMember(){
+    public static Member createNewMember() {
         return Member.builder()
                 .id(createMemberId())
                 .joinDate(LocalDateTime.now())
@@ -35,11 +36,11 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public static String createMemberId(){
+    public static String createMemberId() {
         // UUID 생성
         UUID uuid = UUID.randomUUID();
 
-       return uuid.toString(); // 36자리 문자열 형태로
+        return uuid.toString(); // 36자리 문자열 형태로
 
     }
 }

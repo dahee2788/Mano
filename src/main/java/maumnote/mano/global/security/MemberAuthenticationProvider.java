@@ -25,9 +25,10 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         UserDetails userDetails = memberService.loadUserByUsername(username);
-        // 비밀번호 검증로직
-        if (ObjectUtils.isEmpty(userDetails) || !MemberGeneral.matchPassword(password,userDetails.getPassword())) {
-            throw new AuthenticationException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage()) {};
+
+        if (ObjectUtils.isEmpty(userDetails) || !MemberGeneral.matchPassword(password, userDetails.getPassword())) {
+            throw new AuthenticationException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage()) {
+            };
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
