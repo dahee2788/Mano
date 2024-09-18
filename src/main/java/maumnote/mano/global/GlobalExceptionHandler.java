@@ -27,7 +27,6 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage());
         StackTraceElement[] stackTrace = e.getStackTrace();
 
-        // 최대 3줄만 출력
         Arrays.stream(stackTrace).limit(3).forEach(stackTraceElement -> log.error(stackTraceElement.toString()));
 
         log.error("호출 url : {}", request.getRequestURI());
@@ -49,7 +48,7 @@ public class GlobalExceptionHandler {
             StringBuilder errorMessage = new StringBuilder("[" + ((MethodArgumentTypeMismatchException) e).getName() + "] 잘못된 요청입니다.");
             errorMessage.append("\n").append(e.getMessage());
             // 에러 메시지 수집
-            log.error("MethodArgumentTypeMismatchException : {}", errorMessage.toString());
+            log.error("MethodArgumentTypeMismatchException : {}", errorMessage);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ErrorCode.INVALID_FORMAT, errorMessage.toString()));
         }

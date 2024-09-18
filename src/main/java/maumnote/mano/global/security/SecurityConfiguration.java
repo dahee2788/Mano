@@ -1,6 +1,5 @@
 package maumnote.mano.global.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,13 +22,21 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfiguration {
 
     private final MemberAuthenticationProvider memberAuthenticationProvider;
-    private final TokenProvider tokenProvider;
-    private final ObjectMapper objectMapper;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final LoginSuccessHandler loginSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
 
     @Bean
     public AuthenticationManager authManager() throws Exception {
         return new ProviderManager(Collections.singletonList(memberAuthenticationProvider));
+    }
+
+    @Bean
+    public MemberAuthenticationFilter memberAuthenticationFilter(AuthenticationManager authenticationManager) {
+        MemberAuthenticationFilter filter = new MemberAuthenticationFilter(authenticationManager);
+        filter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        filter.setAuthenticationFailureHandler(loginFailureHandler);
+        return filter;
     }
 
     // 시큐리티 5.7.0-M2 부터 WebSecurityConfigurerAdapter 사용되지 않음
@@ -41,10 +48,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // jwt토큰방식으로 진행할거라 세션에 상태정보를 저장하지 않는 stateless로
                 .httpBasic(withDefaults());
 
-        MemberAuthenticationFilter filter = new MemberAuthenticationFilter(authManager);
-        filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(tokenProvider, objectMapper));
-        filter.setAuthenticationFailureHandler(new LoginFailureHandler(objectMapper));
-        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(memberAuthenticationFilter(authManager), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
