@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import maumnote.mano.dto.ResponseTokenDto;
 import maumnote.mano.service.MemberService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,23 +20,40 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private static final long TOKEN_EXPIRATION_TIME = 60 * 60 * 1000; // 1시간
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 1000;
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000;
     private static final String KEY_ROLES = "roles";
 
     private final MemberService memberService;
 
 
-    public ResponseLoginDto getTokenResponse(String memberId, Collection<? extends GrantedAuthority> roles) {
-        String token = generateToken(memberId, roles);
-        return ResponseLoginDto.builder().token(token).build();
+    public ResponseTokenDto getTokenResponse(String memberId, Collection<? extends GrantedAuthority> roles) {
+
+        String accessToken = generateToken(memberId, roles, ACCESS_TOKEN_EXPIRATION_TIME);
+        String refreshToken = generateToken(memberId, roles, REFRESH_TOKEN_EXPIRATION_TIME);
+
+        return ResponseTokenDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
-    private String generateToken(String memberId, Collection<? extends GrantedAuthority> roles) {
+    public ResponseTokenDto reGenerateTokenResponse(String memberId, Collection<? extends GrantedAuthority> roles, String refreshToken) {
+
+        String accessToken = generateToken(memberId, roles, ACCESS_TOKEN_EXPIRATION_TIME);
+
+        return ResponseTokenDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    private String generateToken(String memberId, Collection<? extends GrantedAuthority> roles, long expirationTime) {
         Claims claims = Jwts.claims().setSubject(memberId);
         claims.put(KEY_ROLES, roles);
 
         Date now = new Date();
-        Date expiresDate = new Date(now.getTime() + TOKEN_EXPIRATION_TIME);
+        Date expiresDate = new Date(now.getTime() + expirationTime);
 
         return Jwts.builder().setClaims(claims).setIssuedAt(now) // 생성시간
                 .setExpiration(expiresDate) // 만료시간

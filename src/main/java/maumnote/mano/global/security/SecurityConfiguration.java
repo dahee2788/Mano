@@ -1,6 +1,7 @@
 package maumnote.mano.global.security;
 
 import lombok.RequiredArgsConstructor;
+import maumnote.mano.global.util.PermitAllUrlLoader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,8 +43,8 @@ public class SecurityConfiguration {
     // 시큐리티 5.7.0-M2 부터 WebSecurityConfigurerAdapter 사용되지 않음
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
-
-        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorize -> authorize.requestMatchers("/", "/join", "/login").permitAll() // 권한없이 접근 가능 => 접근을 풀어야하는 화면은 이렇게 string으로 줄줄이 써야하는지?
+        String[] permitAllUrls = PermitAllUrlLoader.getPermitAllUrls().toArray(new String[0]);
+        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorize -> authorize.requestMatchers(permitAllUrls).permitAll() // 권한없이 접근 가능 => 접근을 풀어야하는 화면은 이렇게 string으로 줄줄이 써야하는지?
                         .anyRequest().authenticated()) // 그 외의 요청은 권한 필요
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // jwt토큰방식으로 진행할거라 세션에 상태정보를 저장하지 않는 stateless로
                 .httpBasic(withDefaults());

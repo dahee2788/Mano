@@ -5,8 +5,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import maumnote.mano.domain.MemberGeneral;
+import maumnote.mano.domain.Member;
 import maumnote.mano.dto.ApiResponse;
+import maumnote.mano.dto.ResponseTokenDto;
 import maumnote.mano.global.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -26,13 +27,9 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         Object principal = authentication.getPrincipal();
-        String memberId = null;
+        String memberId = ((Member) principal).getId();
 
-        if (principal instanceof MemberGeneral) {
-            memberId = ((MemberGeneral) principal).getMember().getId();
-        }
-
-        ResponseLoginDto token = tokenProvider.getTokenResponse(memberId, authentication.getAuthorities());
+        ResponseTokenDto token = tokenProvider.getTokenResponse(memberId, authentication.getAuthorities());
         ApiResponse<?> apiResponse = ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.LOGIN_SUCCESS, token);
 
         response.setStatus(HttpServletResponse.SC_OK);

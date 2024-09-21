@@ -1,7 +1,7 @@
 package maumnote.mano.global.security;
 
 import lombok.RequiredArgsConstructor;
-import maumnote.mano.domain.MemberGeneral;
+import maumnote.mano.domain.Member;
 import maumnote.mano.exception.ErrorCode;
 import maumnote.mano.service.MemberService;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,7 +26,7 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
 
         UserDetails userDetails = memberService.loadUserByUsername(username);
 
-        if (ObjectUtils.isEmpty(userDetails) || !MemberGeneral.matchPassword(password, userDetails.getPassword())) {
+        if (ObjectUtils.isEmpty(userDetails) || !Member.matchPassword(password, userDetails.getPassword())) {
             throw new AuthenticationException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage()) {
             };
         }

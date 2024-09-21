@@ -1,0 +1,8 @@
+{
+  "permitAllUrls": [
+    "/",
+    "/join",
+    "/login",
+    "/refresh-token"
+  ]
+}

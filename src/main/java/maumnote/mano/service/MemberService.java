@@ -2,12 +2,11 @@ package maumnote.mano.service;
 
 import lombok.RequiredArgsConstructor;
 import maumnote.mano.domain.Member;
-import maumnote.mano.domain.MemberGeneral;
 import maumnote.mano.domain.MemberRole;
 import maumnote.mano.dto.RequestGeneralMemberMainDto;
+import maumnote.mano.dto.ResponseMemberJoinDto;
 import maumnote.mano.exception.ErrorCode;
 import maumnote.mano.exception.ManoCustomException;
-import maumnote.mano.repository.MemberGeneralRepository;
 import maumnote.mano.repository.MemberRepository;
 import maumnote.mano.repository.MemberRoleRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,34 +23,24 @@ import java.util.List;
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final MemberGeneralRepository memberGeneralRepository;
     private final MemberRoleRepository memberRoleRepository;
 
     @Transactional
-    public String createGeneralMember(RequestGeneralMemberMainDto requestGeneralMemberMainDto) {
+    public ResponseMemberJoinDto createGeneralMember(RequestGeneralMemberMainDto requestGeneralMemberMainDto) {
 
-        String result;
-        Member member = Member.createNewMember();
-
-        if (!ObjectUtils.isEmpty(memberRepository.save(member))) {
-            MemberGeneral newMemberGeneral = memberGeneralRepository.save(MemberGeneral.fromDto(requestGeneralMemberMainDto, member));
-
-            if (!ObjectUtils.isEmpty(newMemberGeneral)) {
-                result = member.getId();
-            } else {
-                throw new ManoCustomException(ErrorCode.JOIN_FAIL);
-            }
+        Member member = Member.getGeneralVoFromDto(requestGeneralMemberMainDto);
+        Member saved = memberRepository.save(member);
+        if (!ObjectUtils.isEmpty(saved)) {
+            return Member.toResponseDto(saved);
         } else {
             throw new ManoCustomException(ErrorCode.JOIN_FAIL);
         }
-
-        return result;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        return memberGeneralRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage()));
+        return memberRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(ErrorCode.GENERAL_LOGIN_FAIL.getMessage()));
 
     }
 
