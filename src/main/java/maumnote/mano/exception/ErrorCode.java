@@ -16,6 +16,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN("토큰이 만료되었습니다."),
     INVALID_TOKEN("유효하지 않은 토큰입니다."),
     UNKNOWN_ERROR("알 수 없는 오류가 발생했습니다."),
+    ACCESS_DENIED("리소스에 대한 접근 권한이 없습니다."),
     INTERNAL_PROCESSING_ERROR("내부 처리 오류");
 
     private final String message;

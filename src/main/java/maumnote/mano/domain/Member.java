@@ -1,24 +1,21 @@
 package maumnote.mano.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import maumnote.mano.dto.RequestGeneralMemberMainDto;
 import maumnote.mano.dto.ResponseMemberJoinDto;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @SuperBuilder
@@ -28,6 +25,10 @@ import java.util.UUID;
 @ToString(callSuper = true)
 public class Member extends BaseEntity implements UserDetails {
 
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<MemberRole> memberRoles = new ArrayList<>();
     @Id
     private String id;
     private String nickname;
@@ -48,9 +49,10 @@ public class Member extends BaseEntity implements UserDetails {
 
     }
 
-    public static Member getGeneralVoFromDto(RequestGeneralMemberMainDto requestGeneralMemberMainDto) {
+    public static Member getGeneralVoFromDto(RequestGeneralMemberMainDto requestGeneralMemberMainDto, Role role) {
         String id = createMemberId();
-        return Member.builder()
+
+        Member member = Member.builder()
                 .id(id)
                 .joinDate(LocalDateTime.now())
                 .joinType(JoinType.GENERAL)
@@ -59,6 +61,14 @@ public class Member extends BaseEntity implements UserDetails {
                 .createId(id)
                 .updateId(id)
                 .build();
+
+        MemberRole memberRole = MemberRole.builder()
+                .role(role)
+                .member(member)
+                .build();
+
+        member.getMemberRoles().add(memberRole);
+        return member;
     }
 
     public static ResponseMemberJoinDto toResponseDto(Member member) {
@@ -80,7 +90,9 @@ public class Member extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return memberRoles.stream()
+                .map(memberRole -> new SimpleGrantedAuthority(memberRole.getRole().getRoleName()))
+                .collect(Collectors.toList());
     }
 
     @Override

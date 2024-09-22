@@ -1,10 +1,12 @@
 package maumnote.mano.service;
 
 import maumnote.mano.domain.Member;
+import maumnote.mano.domain.Role;
 import maumnote.mano.dto.RequestGeneralMemberMainDto;
 import maumnote.mano.dto.ResponseMemberJoinDto;
 import maumnote.mano.exception.ManoCustomException;
 import maumnote.mano.repository.MemberRepository;
+import maumnote.mano.repository.RoleRespository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
+import static maumnote.mano.global.Constants.DEFAULT_ROLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -24,6 +27,9 @@ class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private RoleRespository roleRespository;
 
     @InjectMocks
     private MemberService memberService;
@@ -36,6 +42,11 @@ class MemberServiceTest {
         Member member = new Member();
         given(memberRepository.save(any(Member.class)))
                 .willReturn(member);
+        given(roleRespository.findByRoleName(DEFAULT_ROLE))
+                .willReturn(Optional.of(Role.builder()
+                        .id(1L)
+                        .roleName("ROLE_USER")
+                        .build()));
 
         // when
         ResponseMemberJoinDto result = memberService.createGeneralMember(new RequestGeneralMemberMainDto("test@test.com", "test"));
@@ -49,6 +60,11 @@ class MemberServiceTest {
     void createMemberFail1() {
 
         // given
+        given(roleRespository.findByRoleName(DEFAULT_ROLE))
+                .willReturn(Optional.of(Role.builder()
+                        .id(1L)
+                        .roleName("ROLE_USER")
+                        .build()));
         Member member = new Member();
         given(memberRepository.save(any(Member.class)))
                 .willReturn(null);

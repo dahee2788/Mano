@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Collection;
@@ -20,7 +21,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 1000;
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 30 * 60 * 1000;
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000;
     private static final String KEY_ROLES = "roles";
 
@@ -61,6 +62,7 @@ public class TokenProvider {
                 .compact();
     }
 
+    @Transactional
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = memberService.loadUserById(getUsernameFromToken(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());

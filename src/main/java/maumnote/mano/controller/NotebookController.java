@@ -5,9 +5,10 @@ import maumnote.mano.dto.ApiResponse;
 import maumnote.mano.dto.RequestNotebookDto;
 import maumnote.mano.dto.ResponseNotebookDto;
 import maumnote.mano.global.ResponseMessage;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 import maumnote.mano.service.NotebookService;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,35 +23,33 @@ public class NotebookController {
     }
 
     @PostMapping("/notebook")
+    @PreAuthorize("hasRole('USER')")
     ApiResponse<ResponseNotebookDto> createNotebook(@RequestBody @Valid RequestNotebookDto notebookDto) {
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_CREATE_SUCCESS, notebookService.create(notebookDto));
     }
 
     @GetMapping("/notebook")
-    ApiResponse<List<ResponseNotebookDto>> getNotebooks () {
+    @PreAuthorize("hasRole('USER')")
+    ApiResponse<List<ResponseNotebookDto>> getNotebooks() {
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.SUCCESS, notebookService.findAll());
     }
 
     @PatchMapping("/notebook/{notebookId}")
-    ApiResponse<ResponseNotebookDto> updateNotebook (@PathVariable("notebookId") long notebookId, @RequestBody @Valid RequestNotebookDto notebookDto) {
+    @PreAuthorize("hasRole('USER')")
+    ApiResponse<ResponseNotebookDto> updateNotebook(@PathVariable("notebookId") long notebookId, @RequestBody @Valid RequestNotebookDto notebookDto) {
 
-        return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_UPDATE_SUCCESS, notebookService.update(notebookId,notebookDto));
+        return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_UPDATE_SUCCESS, notebookService.update(notebookId, notebookDto));
     }
 
     @DeleteMapping("/notebook/{notebookId}")
-    ApiResponse<?> deleteNotebook (@PathVariable("notebookId") long notebookId) {
+    @PreAuthorize("hasRole('USER')")
+    ApiResponse<?> deleteNotebook(@PathVariable("notebookId") long notebookId) {
 
         notebookService.delete(notebookId);
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_DELETE_SUCCESS);
     }
-
-
-
-
-
-
 
 
 }

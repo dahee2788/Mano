@@ -9,6 +9,7 @@ import maumnote.mano.exception.ManoCustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -67,6 +68,10 @@ public class GlobalExceptionHandler {
             log.error("AuthenticationException : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(ErrorCode.GENERAL_LOGIN_FAIL, e.getMessage()));
 
+        }
+        if (e instanceof AuthorizationDeniedException) {
+            log.error("AuthorizationDeniedException : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(ErrorCode.ACCESS_DENIED, e.getMessage()));
         } else {
             log.error("Exception : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(ErrorCode.UNKNOWN_ERROR, e.getMessage()));
