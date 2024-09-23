@@ -43,9 +43,8 @@ public class Member extends BaseEntity implements UserDetails {
     private String socialKey;
 
     public static String createMemberId() {
-        // UUID 생성
         UUID uuid = UUID.randomUUID();
-        return uuid.toString(); // 36자리 문자열 형태로
+        return uuid.toString();
 
     }
 
@@ -77,7 +76,6 @@ public class Member extends BaseEntity implements UserDetails {
                 .build();
     }
 
-    // BCryptPasswordEncoder 사용
     public static String encodePassword(String password) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.encode(password);

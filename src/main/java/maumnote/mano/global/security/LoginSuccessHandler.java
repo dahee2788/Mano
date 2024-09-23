@@ -10,11 +10,13 @@ import maumnote.mano.dto.ApiResponse;
 import maumnote.mano.dto.ResponseTokenDto;
 import maumnote.mano.global.ResponseMessage;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @RequiredArgsConstructor
@@ -33,10 +35,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         ApiResponse<?> apiResponse = ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.LOGIN_SUCCESS, token);
 
         response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json; charset=utf-8");
-        response.setCharacterEncoding("UTF-8");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-        response.getWriter().write(objectMapper.writeValueAsString(apiResponse)); // 직렬화하여 JSON 응답
+        response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
         response.flushBuffer();  // flush는 특정 출력 스트림에 적용 / flushBuffer는 http 응답 전체에 적용, 응답의 상태 코드와 헤더를 포함
     }
 }

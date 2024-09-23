@@ -12,6 +12,7 @@ import maumnote.mano.dto.ApiResponse;
 import maumnote.mano.global.ResponseMessage;
 import maumnote.mano.global.util.PermitAllUrlLoader;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Component
@@ -73,13 +75,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void handleTokenResponse(HttpServletResponse response, String ResponseMessage) throws IOException {
 
-        response.setContentType("application/json; charset=utf-8");
-        response.setCharacterEncoding("UTF-8");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         ApiResponse<?> apiResponse = ApiResponse.response(HttpStatus.UNAUTHORIZED.value(), ResponseMessage);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        response.getWriter().write(objectMapper.writeValueAsString(apiResponse)); // 직렬화하여 JSON 응답
+        response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
         response.flushBuffer();
     }
 }

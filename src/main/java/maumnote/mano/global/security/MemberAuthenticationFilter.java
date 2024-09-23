@@ -21,7 +21,7 @@ public class MemberAuthenticationFilter extends AbstractAuthenticationProcessing
 
     public MemberAuthenticationFilter(AuthenticationManager authenticationManager) {
 
-        super("/login"); // 로그인 URL 설정
+        super("/login");
         setAuthenticationManager(authenticationManager);
         this.objectMapper = new ObjectMapper();
 

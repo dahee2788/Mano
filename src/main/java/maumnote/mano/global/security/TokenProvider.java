@@ -17,13 +17,14 @@ import org.springframework.util.ObjectUtils;
 import java.util.Collection;
 import java.util.Date;
 
+import static maumnote.mano.global.Constants.KEY_ROLES;
+
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
 
     private static final long ACCESS_TOKEN_EXPIRATION_TIME = 30 * 60 * 1000;
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000;
-    private static final String KEY_ROLES = "roles";
 
     private final MemberService memberService;
 

@@ -19,12 +19,12 @@ public class TokenService {
     public ResponseTokenDto reGenerateAccessToken(RequestTokenDto requestTokenDto) {
 
         String refreshToken = requestTokenDto.getRefreshToken();
-        // 토큰 체크
         if (tokenProvider.validateToken(refreshToken)) {
-            // 다시 발급
+
             Authentication authentication = tokenProvider.getAuthentication(refreshToken);
             Object principal = authentication.getPrincipal();
             String memberId = ((Member) principal).getId();
+
             return tokenProvider.reGenerateTokenResponse(memberId, authentication.getAuthorities(), refreshToken);
 
         } else {

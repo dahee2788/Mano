@@ -23,28 +23,28 @@ public class NotebookController {
     }
 
     @PostMapping("/notebook")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole(T(maumnote.mano.global.security.Authority).USER)")
     ApiResponse<ResponseNotebookDto> createNotebook(@RequestBody @Valid RequestNotebookDto notebookDto) {
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_CREATE_SUCCESS, notebookService.create(notebookDto));
     }
 
     @GetMapping("/notebook")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole(T(maumnote.mano.global.security.Authority).USER)")
     ApiResponse<List<ResponseNotebookDto>> getNotebooks() {
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.SUCCESS, notebookService.findAll());
     }
 
     @PatchMapping("/notebook/{notebookId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole(T(maumnote.mano.global.security.Authority).USER)")
     ApiResponse<ResponseNotebookDto> updateNotebook(@PathVariable("notebookId") long notebookId, @RequestBody @Valid RequestNotebookDto notebookDto) {
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_UPDATE_SUCCESS, notebookService.update(notebookId, notebookDto));
     }
 
     @DeleteMapping("/notebook/{notebookId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole(T(maumnote.mano.global.security.Authority).USER)")
     ApiResponse<?> deleteNotebook(@PathVariable("notebookId") long notebookId) {
 
         notebookService.delete(notebookId);

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Mano
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/MANO?serverTimezone=UTC&characterEncoding=UTF-8
+    username: mano_local_user
+    password: 50mUIGYnyJrFV@
+  jpa:
+    show-sql: true
+    database: mysql
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    
+jwt:
+  secret:
+    key: dahee-new-project-maumnote-jwt-secret-key-abcdefghijklmnopqrstuvwxyz
