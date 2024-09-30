@@ -60,7 +60,7 @@ class NotebookServiceMockitoTest {
 
     @Test
     @DisplayName("일기장 저장 성공")
-    void successCreateNotebook() {
+    void successCreateNotebookNotebook() {
 
         // given
         given(notebookRepository.save(any(Notebook.class)))
@@ -69,7 +69,7 @@ class NotebookServiceMockitoTest {
                         .name("즐거운일기장")
                         .build());
         // when
-        ResponseNotebookDto newNotebook = notebookService.create(new RequestNotebookDto("즐거운일기장"));
+        ResponseNotebookDto newNotebook = notebookService.createNotebook(new RequestNotebookDto("즐거운일기장"));
 
         // then
         Assertions.assertNotNull(newNotebook);
@@ -79,14 +79,14 @@ class NotebookServiceMockitoTest {
 
     @Test
     @DisplayName("일기장 저장 실패")
-    void failCreateNotebook() {
+    void failCreateNotebookNotebook() {
 
         // given
         given(notebookRepository.save(any(Notebook.class)))
                 .willReturn(null);
         // when
         ManoCustomException exception = assertThrows(ManoCustomException.class,
-                () -> notebookService.create(new RequestNotebookDto("즐거운일기장")));
+                () -> notebookService.createNotebook(new RequestNotebookDto("즐거운일기장")));
         // then
         Assertions.assertEquals(ErrorCode.NOTEBOOK_CREATE_FAIL, exception.getErrorCode());
     }
@@ -112,7 +112,7 @@ class NotebookServiceMockitoTest {
         given(notebookRepository.findAllByIdOrderedByCreateDate(any()))
                 .willReturn(notebooks);
         // when
-        List<ResponseNotebookDto> responseNotebooks = notebookService.findAll();
+        List<ResponseNotebookDto> responseNotebooks = notebookService.findAllNotebook();
 
         // then
         Assertions.assertEquals(2, responseNotebooks.size());
@@ -120,7 +120,7 @@ class NotebookServiceMockitoTest {
 
     @Test
     @DisplayName("일기장 수정")
-    void updateNotebook() {
+    void updateNotebookNotebook() {
 
         // given
         given(notebookRepository.save(any(Notebook.class)))
@@ -129,7 +129,7 @@ class NotebookServiceMockitoTest {
                         .name("즐거운일기장_수정")
                         .build());
         // when
-        ResponseNotebookDto newNotebook = notebookService.update(111L, new RequestNotebookDto("즐거운일기장_수정"));
+        ResponseNotebookDto newNotebook = notebookService.updateNotebook(111L, new RequestNotebookDto("즐거운일기장_수정"));
 
         // then
         Assertions.assertNotNull(newNotebook);
@@ -139,7 +139,7 @@ class NotebookServiceMockitoTest {
 
     @Test
     @DisplayName("일기장 삭제")
-    void deleteNotebook() {
+    void deleteNotebookNotebook() {
 
         // 보통 delete의 테스트 코드는 어떻게 짜는지요..?
         //  저장->삭제->조회 해서 없는지 체크하는걸까요?
@@ -148,7 +148,7 @@ class NotebookServiceMockitoTest {
         long notebookId = 111L;
 
         // when
-        notebookService.delete(notebookId);
+        notebookService.deleteNotebook(notebookId);
 
         // then
         verify(notebookRepository, times(1)).deleteById(notebookId);

@@ -12,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +40,7 @@ class NotebookControllerMockTest {
 
         // given
         String jsonRequest = "{\"name\":\"test\"}";
-        given(notebookService.create(any(RequestNotebookDto.class)))
+        given(notebookService.createNotebook(any(RequestNotebookDto.class)))
                 .willReturn(ResponseNotebookDto.builder()
                         .id(1234L)
                         .name("test").build());
@@ -50,14 +49,15 @@ class NotebookControllerMockTest {
         // then
         mockMvc.perform(post("/notebook")
                         .with(csrf())
-                .contentType("application/json")
-                .content(jsonRequest))
+                        .contentType("application/json")
+                        .content(jsonRequest))
                 .andDo(print())
                 .andExpect(jsonPath("$.statusCode").value(200))
                 .andExpect(jsonPath("$.data.id").value(1234L))
                 .andExpect(jsonPath("$.data.name").value("test"))
                 .andExpect(status().isOk());
     }
+
     @Test
     @DisplayName("일기장 저장 실패")
     @WithMockUser("testUser")
@@ -70,8 +70,8 @@ class NotebookControllerMockTest {
         // then
         mockMvc.perform(post("/notebook")
                         .with(csrf())
-                .contentType("application/json")
-                .content(jsonRequest))
+                        .contentType("application/json")
+                        .content(jsonRequest))
                 .andDo(print())
                 /* json 데이터가 왜 null로 넘어오는지 모르겠음..! => ErrorResponse @getter가 없어서 접근 불가 */
                 .andExpect(jsonPath("$.errorCode").value(ErrorCode.VALIDATION_ERROR.name()))
@@ -91,8 +91,8 @@ class NotebookControllerMockTest {
                 .name("test2")
                 .build();
         // given
-        List<ResponseNotebookDto> list = List.of(ResponseNotebook1,ResponseNotebook2);
-        given(notebookService.findAll())
+        List<ResponseNotebookDto> list = List.of(ResponseNotebook1, ResponseNotebook2);
+        given(notebookService.findAllNotebook())
                 .willReturn(list);
 
         // when
@@ -112,17 +112,17 @@ class NotebookControllerMockTest {
         // given
         String jsonRequest = "{\"name\":\"일기장 수정 성공\"}";
         long pathParameter = 1234L;
-        given(notebookService.update(anyLong(),any(RequestNotebookDto.class)))
+        given(notebookService.updateNotebook(anyLong(), any(RequestNotebookDto.class)))
                 .willReturn(ResponseNotebookDto.builder()
                         .id(1234L)
                         .name("일기장 수정 성공")
                         .build());
         // when
         // then
-        mockMvc.perform(patch("/notebook/"+pathParameter)
+        mockMvc.perform(patch("/notebook/" + pathParameter)
                         .with(csrf())
-                .contentType("application/json")
-                .content(jsonRequest))
+                        .contentType("application/json")
+                        .content(jsonRequest))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.name").value("일기장 수정 성공"));
@@ -141,8 +141,8 @@ class NotebookControllerMockTest {
         // then
         mockMvc.perform(patch("/notebook/" + pathParameter)
                         .with(csrf())
-                .contentType("application/json")
-                .content(jsonRequest))
+                        .contentType("application/json")
+                        .content(jsonRequest))
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.errorCode").value(ErrorCode.INVALID_FORMAT.name()));
@@ -151,31 +151,31 @@ class NotebookControllerMockTest {
     @Test
     @DisplayName("일기장 삭제 성공")
     @WithMockUser("testUser")
-    void deleteNotebookOk() throws Exception{
+    void deleteNotebookOk() throws Exception {
 
         // given
         long pathParameter = 1234L;
 
         // when
         // then
-        mockMvc.perform(delete("/notebook/"+pathParameter)
+        mockMvc.perform(delete("/notebook/" + pathParameter)
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk());
-        verify(notebookService,times(1)).delete(pathParameter);
+        verify(notebookService, times(1)).deleteNotebook(pathParameter);
     }
 
     @Test
     @DisplayName("일기장 삭제 실패")
     @WithMockUser("testUser")
-    void deleteNotebook400Fail() throws Exception{
+    void deleteNotebook400Fail() throws Exception {
 
         // given
         String pathParameter = "테스트";
 
         // when
         // then
-        mockMvc.perform(delete("/notebook/"+pathParameter)
+        mockMvc.perform(delete("/notebook/" + pathParameter)
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().is4xxClientError())

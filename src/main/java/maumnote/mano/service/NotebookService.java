@@ -23,7 +23,7 @@ public class NotebookService {
     private final NotebookPermissionRepository notebookPermissionRepository;
 
 
-    public ResponseNotebookDto create(RequestNotebookDto requestNotebookDto) {
+    public ResponseNotebookDto createNotebook(RequestNotebookDto requestNotebookDto) {
 
         Notebook requestNotebook = Notebook.fromRequestDto(requestNotebookDto);
         Notebook saveNotebook = notebookRepository.save(requestNotebook);
@@ -38,7 +38,7 @@ public class NotebookService {
         return Notebook.toResponseDto(saveNotebook);
     }
 
-    public List<ResponseNotebookDto> findAll() {
+    public List<ResponseNotebookDto> findAllNotebook() {
 
         Member principal = SecurityContextUtil.getAuthenticationMember();
         List<NotebookPermission> notebookPermissions = notebookPermissionRepository.findByMemberId(principal.getId());
@@ -50,7 +50,7 @@ public class NotebookService {
         return notebooks.stream().map(Notebook::toResponseDto).toList();
     }
 
-    public ResponseNotebookDto update(long id, RequestNotebookDto requestNotebookDto) {
+    public ResponseNotebookDto updateNotebook(long id, RequestNotebookDto requestNotebookDto) {
 
         Notebook requestNotebook = Notebook.fromRequestDto(id, requestNotebookDto);
         Notebook saveNotebook = notebookRepository.save(requestNotebook);
@@ -58,7 +58,7 @@ public class NotebookService {
         return Notebook.toResponseDto(saveNotebook);
     }
 
-    public boolean delete(long id) {
+    public boolean deleteNotebook(long id) {
 
         notebookRepository.deleteById(id);
 
