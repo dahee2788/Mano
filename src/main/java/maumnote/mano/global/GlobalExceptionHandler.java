@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> exception(Exception e, HttpServletRequest request) {
 
-        log.error(e.getMessage());
+        log.error(e.getClass().getName() + " : " + e.getMessage());
         StackTraceElement[] stackTrace = e.getStackTrace();
 
         Arrays.stream(stackTrace)

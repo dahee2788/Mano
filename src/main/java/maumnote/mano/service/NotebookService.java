@@ -1,10 +1,15 @@
 package maumnote.mano.service;
 
+import lombok.RequiredArgsConstructor;
+import maumnote.mano.domain.Member;
 import maumnote.mano.domain.Notebook;
+import maumnote.mano.domain.NotebookPermission;
 import maumnote.mano.dto.RequestNotebookDto;
 import maumnote.mano.dto.ResponseNotebookDto;
 import maumnote.mano.exception.ErrorCode;
 import maumnote.mano.exception.ManoCustomException;
+import maumnote.mano.global.util.SecurityContextUtil;
+import maumnote.mano.repository.NotebookPermissionRepository;
 import maumnote.mano.repository.NotebookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -12,19 +17,22 @@ import org.springframework.util.ObjectUtils;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class NotebookService {
     private final NotebookRepository notebookRepository;
+    private final NotebookPermissionRepository notebookPermissionRepository;
 
-    public NotebookService(NotebookRepository notebookRepository) {
-        this.notebookRepository = notebookRepository;
-    }
 
     public ResponseNotebookDto create(RequestNotebookDto requestNotebookDto) {
 
         Notebook requestNotebook = Notebook.fromRequestDto(requestNotebookDto);
         Notebook saveNotebook = notebookRepository.save(requestNotebook);
+
         if (ObjectUtils.isEmpty(saveNotebook)) {
             throw new ManoCustomException(ErrorCode.NOTEBOOK_CREATE_FAIL);
+        } else {
+            NotebookPermission notebookPermission = NotebookPermission.from(saveNotebook.getId());
+            notebookPermissionRepository.save(notebookPermission);
         }
 
         return Notebook.toResponseDto(saveNotebook);
@@ -32,7 +40,12 @@ public class NotebookService {
 
     public List<ResponseNotebookDto> findAll() {
 
-        List<Notebook> notebooks = notebookRepository.findAll();
+        Member principal = SecurityContextUtil.getAuthenticationMember();
+        List<NotebookPermission> notebookPermissions = notebookPermissionRepository.findByMemberId(principal.getId());
+
+        List<Notebook> notebooks = notebookRepository.findAllById(notebookPermissions.stream()
+                .map(NotebookPermission::getNotebookId)
+                .toList());
 
         return notebooks.stream().map(Notebook::toResponseDto).toList();
     }
@@ -45,10 +58,14 @@ public class NotebookService {
         return Notebook.toResponseDto(saveNotebook);
     }
 
-    public void delete(long id) {
+    public boolean delete(long id) {
 
-        // 리턴형이 void인 메소드에 대해서 검증하는 방법..?
         notebookRepository.deleteById(id);
+
+        List<NotebookPermission> notebookPermissions = notebookPermissionRepository.findAllByNotebookId(id);
+        notebookPermissionRepository.deleteAll(notebookPermissions);
+
+        return notebookRepository.findById(id).isEmpty();
     }
 
 }

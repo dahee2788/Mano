@@ -45,10 +45,9 @@ public class NotebookController {
 
     @DeleteMapping("/notebook/{notebookId}")
     @PreAuthorize("hasRole(T(maumnote.mano.global.security.Authority).USER)")
-    ApiResponse<?> deleteNotebook(@PathVariable("notebookId") long notebookId) {
+    ApiResponse<Boolean> deleteNotebook(@PathVariable("notebookId") long notebookId) {
 
-        notebookService.delete(notebookId);
-        return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_DELETE_SUCCESS);
+        return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.NOTEBOOK_DELETE_SUCCESS, notebookService.delete(notebookId));
     }
 
 

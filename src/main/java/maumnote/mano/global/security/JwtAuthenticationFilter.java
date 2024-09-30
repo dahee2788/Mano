@@ -24,12 +24,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static maumnote.mano.global.Constants.AUTHORIZATION_HEADER;
+import static maumnote.mano.global.Constants.BEARER_PREFIX;
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_PREFIX = "Bearer ";
 
     private final TokenProvider tokenProvider;
     private final ObjectMapper objectMapper;
