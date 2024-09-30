@@ -43,7 +43,7 @@ public class NotebookService {
         Member principal = SecurityContextUtil.getAuthenticationMember();
         List<NotebookPermission> notebookPermissions = notebookPermissionRepository.findByMemberId(principal.getId());
 
-        List<Notebook> notebooks = notebookRepository.findAllById(notebookPermissions.stream()
+        List<Notebook> notebooks = notebookRepository.findAllByIdOrderedByCreateDate(notebookPermissions.stream()
                 .map(NotebookPermission::getNotebookId)
                 .toList());
 

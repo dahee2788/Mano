@@ -109,7 +109,7 @@ class NotebookServiceMockitoTest {
         Notebook notebook1 = new Notebook(1L, "일기장1");
         Notebook notebook2 = new Notebook(2L, "일기장2");
         List<Notebook> notebooks = List.of(notebook1, notebook2);
-        given(notebookRepository.findAllById(any()))
+        given(notebookRepository.findAllByIdOrderedByCreateDate(any()))
                 .willReturn(notebooks);
         // when
         List<ResponseNotebookDto> responseNotebooks = notebookService.findAll();
