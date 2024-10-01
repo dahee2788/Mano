@@ -13,6 +13,7 @@ import maumnote.mano.global.util.SecurityContextUtil;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ public class Note extends BaseEntity {
     private LocalDate writeDate;
 
     public static Note fromRequestDto(RequestNoteDto dto) {
+
         Member member = SecurityContextUtil.getAuthenticationMember();
 
         return Note.builder()
@@ -40,16 +42,22 @@ public class Note extends BaseEntity {
                 .emotionScore(dto.getEmotionScore())
                 .content(dto.getContent())
                 .writeDate(ObjectUtils.isEmpty(dto.getWriteDate()) ? LocalDate.now() : dto.getWriteDate())
+                .createId(member.getId())
+                .updateId(member.getId())
                 .build();
     }
 
     public static Note fromRequestDto(long id, RequestNoteDto dto) {
+
+        Member member = SecurityContextUtil.getAuthenticationMember();
 
         return Note.builder()
                 .id(id)
                 .emotionScore(dto.getEmotionScore())
                 .content(dto.getContent())
                 .writeDate(ObjectUtils.isEmpty(dto.getWriteDate()) ? LocalDate.now() : dto.getWriteDate())
+                .updateDate(LocalDateTime.now())
+                .updateId(member.getId())
                 .build();
     }
 

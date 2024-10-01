@@ -2,12 +2,14 @@ package maumnote.mano.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
+@Builder
 public class RequestNoteDto {
 
     @NotNull(message = "일기장을 선택해주세요.")

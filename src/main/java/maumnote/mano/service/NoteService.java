@@ -52,7 +52,6 @@ public class NoteService {
         return Note.toSaveResponseDto(saveNote);
     }
 
-    // 일기 조회
     public ResponseNoteDto findNote(long id) {
 
         return noteRepository.findById(id)
