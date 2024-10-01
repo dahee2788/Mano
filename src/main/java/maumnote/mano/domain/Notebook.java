@@ -56,6 +56,7 @@ public class Notebook extends BaseEntity {
                 .updateId(notebook.getUpdateId())
                 .build();
     }
+
 }
 
 

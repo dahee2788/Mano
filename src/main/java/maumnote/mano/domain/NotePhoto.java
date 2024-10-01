@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -21,5 +23,14 @@ public class NotePhoto {
     private long id;
     private long noteId;
     private String image;
+
+    public static List<NotePhoto> fromRequestDto(long noteId, List<String> images) {
+        return images.stream()
+                .map(image -> NotePhoto.builder()
+                        .noteId(noteId)
+                        .image(image)
+                        .build())
+                .toList();
+    }
 
 }

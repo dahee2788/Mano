@@ -1,10 +1,13 @@
 package maumnote.mano.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import maumnote.mano.dto.ApiResponse;
 import maumnote.mano.dto.RequestNotebookDto;
+import maumnote.mano.dto.ResponseNoteDto;
 import maumnote.mano.dto.ResponseNotebookDto;
 import maumnote.mano.global.ResponseMessage;
+import maumnote.mano.service.NoteService;
 import maumnote.mano.service.NotebookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,13 +17,11 @@ import java.util.List;
 
 
 @RestController
+@RequiredArgsConstructor
 public class NotebookController {
 
     private final NotebookService notebookService;
-
-    public NotebookController(NotebookService notebookService) {
-        this.notebookService = notebookService;
-    }
+    private final NoteService noteService;
 
     @PostMapping("/notebook")
     @PreAuthorize("hasRole(T(maumnote.mano.global.security.Authority).USER)")
@@ -34,6 +35,13 @@ public class NotebookController {
     ApiResponse<List<ResponseNotebookDto>> getNotebooks() {
 
         return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.SUCCESS, notebookService.findAllNotebook());
+    }
+
+    @GetMapping("/notebook/{notebookId}")
+    @PreAuthorize("hasRole(T(maumnote.mano.global.security.Authority).USER)")
+    ApiResponse<List<ResponseNoteDto>> getNotesByNotebookId(@PathVariable("notebookId") long notebookId) {
+
+        return ApiResponse.response(HttpStatus.OK.value(), ResponseMessage.SUCCESS, noteService.findAllNoteByNotebookId(notebookId));
     }
 
     @PatchMapping("/notebook/{notebookId}")
