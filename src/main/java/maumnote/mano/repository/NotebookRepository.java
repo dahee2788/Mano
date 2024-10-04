@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface NotebookRepository extends JpaRepository<Notebook, Long> {
-    List<Notebook> findAllByIdOrderedByCreateDate(List<Long> notebookIds);
+    List<Notebook> findAllByIdInOrderByCreateDate(List<Long> ids);
 }
