@@ -6,8 +6,8 @@ GRANT ALL PRIVILEGES ON *.* TO 'new_admin'@'%' WITH GRANT OPTION;
 DROP USER 'root'@'localhost';
 
 -- 시작 DB에 접근 가능한 유저 생성
-CREATE USER 'db_user'@'%' IDENTIFIED BY 'db_user_password';
-GRANT ALL PRIVILEGES ON start_db.* TO 'db_user'@'%';
+CREATE USER 'new_user'@'%' IDENTIFIED BY 'new_user_password';
+GRANT ALL PRIVILEGES ON mano.* TO 'new_user'@'%';
 
 FLUSH PRIVILEGES;
 
@@ -32,6 +32,18 @@ create table member
 )
     comment '사용자 테이블';
 
+INSERT INTO mano.member (id, nickname, profile_image, introduction, join_date, withdrawal_date, create_date, create_id,
+                         update_date, update_id, join_type, email, password, social_key)
+VALUES ('a7aeda02-a508-44f7-b17b-55b1b7400ac0', 'system', null, null, '2024-08-25 21:34:39', null,
+        '2024-08-25 21:34:47', 'system', '2024-08-25 21:34:47', 'system', 'GENERAL', 'system@test.com',
+        '$2a$10$V0qqknCUlOZMjmWyf7YZM.EuMxoCiRGYuJpJQMsLJQwXTB1BINhci', null);
+INSERT INTO mano.member (id, nickname, profile_image, introduction, join_date, withdrawal_date, create_date, create_id,
+                         update_date, update_id, join_type, email, password, social_key)
+VALUES ('cd6545c8-77b3-41d0-9c6b-8777f83f4c78', null, null, null, '2024-09-01 10:19:22', null, '2024-09-01 10:19:23',
+        'system', '2024-09-01 10:19:23', 'system', 'GENERAL', 'test@test.com',
+        '$2a$10$V0qqknCUlOZMjmWyf7YZM.EuMxoCiRGYuJpJQMsLJQwXTB1BINhci', null);
+
+
 -- auto-generated definition
 create table member_role
 (
@@ -41,6 +53,12 @@ create table member_role
     role_id   int         not null comment '권한 id'
 )
     comment '회원별 권한 테이블';
+
+INSERT INTO mano.member_role (id, member_id, role_id)
+VALUES (1, 'a7aeda02-a508-44f7-b17b-55b1b7400ac0', 2);
+INSERT INTO mano.member_role (id, member_id, role_id)
+VALUES (2, 'cd6545c8-77b3-41d0-9c6b-8777f83f4c78', 1);
+
 
 -- auto-generated definition
 create table note
@@ -108,6 +126,13 @@ create table role
     role_description varchar(200) null comment '권한 설명'
 )
     comment '권한';
+
+INSERT INTO mano.role (id, role_name, role_description)
+VALUES (1, 'ROLE_USER', '일반 유저');
+INSERT INTO mano.role (id, role_name, role_description)
+VALUES (2, 'ROLE_ADMIN', '운영자');
+
+commit;
 
 
 
