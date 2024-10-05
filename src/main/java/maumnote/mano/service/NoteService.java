@@ -10,6 +10,7 @@ import maumnote.mano.exception.ManoCustomException;
 import maumnote.mano.repository.NotePhotoRepository;
 import maumnote.mano.repository.NoteRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class NoteService {
     private final NoteRepository noteRepository;
     private final NotePhotoRepository notePhotoRepository;
 
+    @Transactional
     public ResponseNoteDto createNote(RequestNoteDto requestNoteDto) {
 
         Note requestNote = Note.fromRequestDto(requestNoteDto);
@@ -37,6 +39,7 @@ public class NoteService {
         return Note.toSaveResponseDto(saveNote);
     }
 
+    @Transactional
     public ResponseNoteDto updateNote(long id, RequestNoteDto requestNoteDto) {
 
         Note requestNote = Note.fromRequestDto(id, requestNoteDto);
@@ -52,6 +55,7 @@ public class NoteService {
         return Note.toSaveResponseDto(saveNote);
     }
 
+    @Transactional
     public ResponseNoteDto findNote(long id) {
 
         return noteRepository.findById(id)
@@ -62,12 +66,14 @@ public class NoteService {
                 .orElse(null);
     }
 
+    @Transactional
     public List<ResponseNoteDto> findAllNoteByNotebookId(long notebookId) {
 
         List<Note> notes = noteRepository.findAllByNotebookIdOrderByIdDesc(notebookId);
         return Note.toFindListResponseDto(notes);
     }
 
+    @Transactional
     public boolean deleteNote(long id) {
 
         noteRepository.deleteById(id);
