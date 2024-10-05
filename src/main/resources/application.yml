@@ -3,9 +3,9 @@ spring:
     name: Mano
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/start_db?serverTimezone=UTC&characterEncoding=UTF-8
-    username: db_user
-    password: db_user_password
+    url: jdbc:mysql://localhost:3307/mano?serverTimezone=UTC&characterEncoding=UTF-8
+    username: new_user
+    password: new_user_password
   jpa:
     show-sql: true
     database: mysql
