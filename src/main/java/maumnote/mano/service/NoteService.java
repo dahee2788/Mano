@@ -55,7 +55,7 @@ public class NoteService {
         return Note.toSaveResponseDto(saveNote);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseNoteDto findNote(long id) {
 
         return noteRepository.findById(id)
@@ -66,7 +66,7 @@ public class NoteService {
                 .orElse(null);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ResponseNoteDto> findAllNoteByNotebookId(long notebookId) {
 
         List<Note> notes = noteRepository.findAllByNotebookIdOrderByIdDesc(notebookId);
