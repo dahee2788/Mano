@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -32,6 +33,7 @@ import static maumnote.mano.global.Constants.BEARER_PREFIX;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
+    private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
     private final TokenProvider tokenProvider;
     private final ObjectMapper objectMapper;
 
@@ -42,9 +44,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String requestURI = request.getRequestURI();
             List<String> permitAllUrls = PermitAllUrlLoader.getPermitAllUrls();
 
-            if (permitAllUrls.contains(requestURI)) {
-                filterChain.doFilter(request, response);
-                return;
+            for (String permitUrl : permitAllUrls) {
+                if (antPathMatcher.match(permitUrl, requestURI)) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
             }
 
             if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
