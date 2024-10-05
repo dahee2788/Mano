@@ -12,6 +12,7 @@ import maumnote.mano.global.util.SecurityContextUtil;
 import maumnote.mano.repository.NotebookPermissionRepository;
 import maumnote.mano.repository.NotebookRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class NotebookService {
     private final NotebookPermissionRepository notebookPermissionRepository;
 
 
+    @Transactional
     public ResponseNotebookDto createNotebook(RequestNotebookDto requestNotebookDto) {
 
         Notebook requestNotebook = Notebook.fromRequestDto(requestNotebookDto);
@@ -38,6 +40,7 @@ public class NotebookService {
         return Notebook.toResponseDto(saveNotebook);
     }
 
+    @Transactional
     public List<ResponseNotebookDto> findAllNotebook() {
 
         Member principal = SecurityContextUtil.getAuthenticationMember();
@@ -50,6 +53,7 @@ public class NotebookService {
         return notebooks.stream().map(Notebook::toResponseDto).toList();
     }
 
+    @Transactional
     public ResponseNotebookDto updateNotebook(long id, RequestNotebookDto requestNotebookDto) {
 
         Notebook requestNotebook = Notebook.fromRequestDto(id, requestNotebookDto);
@@ -58,6 +62,7 @@ public class NotebookService {
         return Notebook.toResponseDto(saveNotebook);
     }
 
+    @Transactional
     public boolean deleteNotebook(long id) {
 
         notebookRepository.deleteById(id);
