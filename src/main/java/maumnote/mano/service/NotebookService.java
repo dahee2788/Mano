@@ -40,7 +40,7 @@ public class NotebookService {
         return Notebook.toResponseDto(saveNotebook);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ResponseNotebookDto> findAllNotebook() {
 
         Member principal = SecurityContextUtil.getAuthenticationMember();
