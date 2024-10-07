@@ -18,13 +18,14 @@ import io.swagger.v3.oas.models.tags.Tag;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.IOException;
 import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI openAPI() {
+    public OpenAPI openAPI() throws IOException {
 
         SecurityScheme apiKey = new SecurityScheme()
                 .type(SecurityScheme.Type.APIKEY)
@@ -61,17 +62,26 @@ public class SwaggerConfig {
                 .path("/login", new PathItem()
                         .post(new Operation()
                                 .tags(List.of(
-                                        "Authentication"
+                                        "로그인"
                                 ))
-                                .summary("Login")
-                                .description("응답받은 access token을 'Bearer + token' 방식으로 Authorize에 입력해주세요.")
+                                .summary("로그인")
+                                .description("응답받은 accessToken을 'Bearer {accessToken}' 방식으로 Authorize에 입력해주세요.")
                                 .operationId("login")
                                 .requestBody(new RequestBody()
+                                        .required(true)
                                         .content(new Content()
                                                 .addMediaType("application/json", new MediaType()
                                                         .schema(new Schema()
-                                                                .addProperty("email", new Schema().type("string"))
-                                                                .addProperty("password", new Schema().type("string"))
+                                                                .required(List.of("email", "password"))
+                                                                .addProperty("email", new Schema()
+                                                                        .type("string")
+                                                                        .description("이메일")
+                                                                        .example("test@test.com"))
+                                                                .addProperty("password", new Schema()
+                                                                        .type("string")
+                                                                        .description("비밀번호")
+                                                                        .example("test")
+                                                                )
                                                         )
                                                 )
                                         )
@@ -85,7 +95,7 @@ public class SwaggerConfig {
                 .info(apiInfo());
     }
 
-    private Info apiInfo() {
+    private Info apiInfo() throws IOException {
         return new Info()
                 .title("MaumNote : Mano")
                 .description("하루의 기분을 작성할 수 있는 일기 Api 입니다.\n\n 로그인부터 하시어 응답받은 token으로 인증을 먼저 진행해주세요.")
