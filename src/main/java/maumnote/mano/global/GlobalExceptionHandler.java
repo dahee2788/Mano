@@ -1,6 +1,9 @@
 package maumnote.mano.global;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import maumnote.mano.dto.ErrorResponse;
@@ -74,6 +77,14 @@ public class GlobalExceptionHandler {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse(ErrorCode.EMPTY_REQUEST_BODY, e.getMessage()));
+        }
+        if (e instanceof UnsupportedJwtException ||
+                e instanceof MalformedJwtException ||
+                e instanceof SignatureException) {
+            log.error("ExpiredJwtException : {}", e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(ErrorCode.INVALID_TOKEN, e.getMessage()));
         }
         if (e instanceof ExpiredJwtException) {
 

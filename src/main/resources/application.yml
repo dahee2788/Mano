@@ -10,6 +10,7 @@ spring:
     show-sql: true
     database: mysql
 
+
 logging:
   level:
     org.springframework.security: DEBUG
@@ -17,3 +18,10 @@ logging:
 jwt:
   secret:
     key: dahee-new-project-maumnote-jwt-secret-key-abcdefghijklmnopqrstuvwxyz
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+  show-login-endpoint: true  # login 엔드포인트 Swagger에 노출

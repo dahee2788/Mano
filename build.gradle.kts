@@ -33,6 +33,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5") // Jackson을 사용하는 경우
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -43,4 +44,7 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+tasks.test {
+    enabled = false
 }

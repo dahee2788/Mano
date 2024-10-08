@@ -3,6 +3,10 @@
     "/",
     "/join",
     "/login",
-    "/refresh-token"
+    "/refresh-token",
+    "/v3/api-docs/**",
+    "/swagger-ui/**",
+    "/swagger-resources/**",
+    "/webjars/**"
   ]
 }
