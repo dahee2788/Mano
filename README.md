@@ -1,6 +1,8 @@
-# 프로젝트 제목
+# MaunNote : Mano
 
-프로젝트에 대한 간결하고 명확한 설명.
+프로젝트 Mano는 사용자가 하루의 기분을 숫자로 표현할 수 있는 일기와 일기장을 관리하는 API 프로젝트입니다. 
+
+이 프로젝트를 통해 사용자는 자신의 감정을 기록하고, 일기장을 통해 기분 변화를 쉽게 추적할 수 있습니다.
 
 
 ## 프로젝트 환경
@@ -33,6 +35,7 @@
 - 빌드 도구: Gradle
 
 - 테스트 프레임워크: JUnit5 
+
 
 
 ## 설치 방법
@@ -88,6 +91,7 @@
 
 
 
+
 ## 프로젝트 구조도
 
 
@@ -126,6 +130,7 @@ root/src
 <img width="850" alt="스크린샷 2024-10-09 오후 6 42 27" src="https://github.com/user-attachments/assets/a2868a2c-b812-4945-bf22-05db7ff74c53">
 
 
+
 ## API 문서
 
 이 프로젝트의 API 문서는 Swagger를 통해 제공됩니다. 
@@ -133,5 +138,16 @@ root/src
 로컬 어플리케이션을 실행한 후, 아래의 URL로 접근하세요.
 > http://localhost:8080/swagger-ui/index.html#/
 
+
 ## 트러블슈팅
+
+1. 요청 데이터 역직렬화시 발생했던 문제
+   > https://dev-heeya.tistory.com/44
+3. Springboot 3.xx의 기본 패키지 문제
+   > https://dev-heeya.tistory.com/47
+5. SpringSecurity 도입 이후, Controller test 실패 문제
+   > https://dev-heeya.tistory.com/51
+7. entity 간의 관계 정의 후, builer의 문제
+   > https://dev-heeya.tistory.com/67
+
   
