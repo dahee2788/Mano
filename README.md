@@ -123,6 +123,9 @@ root/src
                 ├── repository
                 └── service
 ```
+<img width="850" alt="스크린샷 2024-10-09 오후 6 42 27" src="https://github.com/user-attachments/assets/a2868a2c-b812-4945-bf22-05db7ff74c53">
+
+
 ## API 문서
 
 이 프로젝트의 API 문서는 Swagger를 통해 제공됩니다. 
