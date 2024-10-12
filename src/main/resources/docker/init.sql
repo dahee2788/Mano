@@ -6,8 +6,8 @@ GRANT ALL PRIVILEGES ON *.* TO 'new_admin'@'%' WITH GRANT OPTION;
 DROP USER 'root'@'localhost';
 
 -- 시작 DB에 접근 가능한 유저 생성
-CREATE USER 'new_user'@'%' IDENTIFIED BY 'new_user_password';
-GRANT ALL PRIVILEGES ON mano.* TO 'new_user'@'%';
+CREATE USER 'local_user'@'%' IDENTIFIED BY 'local_user_password';
+GRANT ALL PRIVILEGES ON mano.* TO 'local_user'@'%';
 
 FLUSH PRIVILEGES;
 
