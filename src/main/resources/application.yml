@@ -1,15 +1,24 @@
 spring:
   application:
     name: Mano
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/mano?serverTimezone=UTC&characterEncoding=UTF-8
-    username: new_user
-    password: new_user_password
   jpa:
     show-sql: true
     database: mysql
+  profiles:
+    active: local # 활성 프로필 설정
+    group:
+      local:
+        - local
+        - common
+      dev:
+        - dev
+        - common
 
+---
+spring:
+  config:
+    activate:
+      on-profile: common
 
 logging:
   level:
@@ -25,3 +34,27 @@ springdoc:
   swagger-ui:
     enabled: true
   show-login-endpoint: true  # login 엔드포인트 Swagger에 노출
+---
+# local 프로필 설정
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/mano?serverTimezone=UTC&characterEncoding=UTF-8
+    username: local_user
+    password: local_user_password
+
+---
+# dev 프로필 설정
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://dev-db.example.com:3306/mano?serverTimezone=UTC&characterEncoding=UTF-8
+    username: dev_user
+    password: dev_user_password
+
