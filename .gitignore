@@ -39,5 +39,3 @@ out/
 ### PEM ###
 *.pem
 
-
-git clone --branch dev https://github.com/dahee2788/Mano.git
