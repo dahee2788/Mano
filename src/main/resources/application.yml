@@ -54,7 +54,7 @@ spring:
       on-profile: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://dev-db.example.com:3306/mano?serverTimezone=UTC&characterEncoding=UTF-8
-    username: dev_user
-    password: dev_user_password
+    url: jdbc:mysql://localhost:3307/mano?serverTimezone=UTC&characterEncoding=UTF-8
+    username: local_user
+    password: local_user_password
 
