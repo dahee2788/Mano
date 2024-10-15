@@ -135,7 +135,9 @@ root/src
 
 이 프로젝트의 API 문서는 Swagger를 통해 제공됩니다. 
 
-로컬 어플리케이션을 실행한 후, 아래의 URL로 접근하세요.
+* 개발
+> http://43.200.254.39:8080/swagger-ui/index.html#/
+* 로컬
 > http://localhost:8080/swagger-ui/index.html#/
 
 
