@@ -7,7 +7,7 @@
 ## TODO
 ✅ redis를 이용한 securityUser 로그아웃 구현
 
-✅ Auth2를 사용하여 socialMedia 회원가입/로그인 구현
+✅ OAuth2를 사용하여 socialMedia 회원가입/로그인 구현
 
 ✅ 프로메테우스와 그라파나를 이용한 모니터링 추가
 
