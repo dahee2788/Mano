@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.util.Collections;
 
 import static maumnote.mano.global.Constants.FIRST_INDEX;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration // 설정 관련된 파일이라는 어노테이션
 @EnableWebSecurity // 시큐리티를 활성화하는 어노테이션
@@ -51,9 +52,8 @@ public class SecurityConfiguration {
 
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorize -> authorize.requestMatchers(permitAllUrls).permitAll() // 권한없이 접근 가능 => 접근을 풀어야하는 화면은 이렇게 string으로 줄줄이 써야하는지?
                         .anyRequest().authenticated()) // 그 외의 요청은 권한 필요
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // jwt토큰방식으로 진행할거라 세션에 상태정보를 저장하지 않는 stateless로
-//                .httpBasic(withDefaults());
-//                .httpBasic().disable(); // 기본 인증 비활성화
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // jwt토큰방식으로 진행할거라 세션에 상태정보를 저장하지 않는 stateless로
+                .httpBasic(withDefaults());
 
         http.addFilterBefore(memberAuthenticationFilter(authManager), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
