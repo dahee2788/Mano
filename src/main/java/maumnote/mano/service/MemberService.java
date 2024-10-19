@@ -29,6 +29,10 @@ public class MemberService implements UserDetailsService {
     @Transactional
     public ResponseMemberJoinDto createGeneralMember(RequestGeneralMemberMainDto requestGeneralMemberMainDto) {
 
+        if (memberRepository.findByEmail(requestGeneralMemberMainDto.getEmail()).isPresent()) {
+            throw new ManoCustomException(ErrorCode.DUPLICATE_MEMBER_EMAIL);
+        }
+
         Role defaultRole = roleRespository.findByRoleName(DEFAULT_ROLE).orElseThrow();
         Member member = Member.getGeneralVoFromDto(requestGeneralMemberMainDto, defaultRole);
         Member saved = memberRepository.save(member);
