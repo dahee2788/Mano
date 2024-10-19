@@ -43,9 +43,10 @@ public class GlobalExceptionHandler {
         if (e instanceof ManoCustomException) {
 
             log.error("ManoCustomException : {}", e.getMessage());
+            ErrorCode errorCode = ((ManoCustomException) e).getErrorCode();
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse(((ManoCustomException) e).getErrorCode(), e.getMessage()));
+                    .status(errorCode.getHttpStatusCode())
+                    .body(new ErrorResponse(errorCode, e.getMessage()));
         }
         if (e instanceof MethodArgumentNotValidException) {
 
