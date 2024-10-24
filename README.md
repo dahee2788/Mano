@@ -158,11 +158,13 @@ root/src
 
 1. 요청 데이터 역직렬화시 발생했던 문제
    > https://dev-heeya.tistory.com/44
-3. Springboot 3.xx의 기본 패키지 문제
+2. Springboot 3.xx의 기본 패키지 문제
    > https://dev-heeya.tistory.com/47
-5. SpringSecurity 도입 이후, Controller test 실패 문제
+3. SpringSecurity 도입 이후, Controller test 실패 문제
    > https://dev-heeya.tistory.com/51
-7. entity 간의 관계 정의 후, builer의 문제
+4. entity 간의 관계 정의 후, builer의 문제
    > https://dev-heeya.tistory.com/67
+5. AWS 배포 후 인스턴스가 멈추는 현상
+   > https://dev-heeya.tistory.com/76
 
   
