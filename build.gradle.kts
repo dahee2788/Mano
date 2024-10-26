@@ -48,3 +48,6 @@ tasks.withType<Test> {
 tasks.test {
     enabled = false
 }
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-Xlint:unchecked")
+}
