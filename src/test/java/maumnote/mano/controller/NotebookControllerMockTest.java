@@ -3,12 +3,17 @@ package maumnote.mano.controller;
 import maumnote.mano.dto.RequestNotebookDto;
 import maumnote.mano.dto.ResponseNotebookDto;
 import maumnote.mano.exception.ErrorCode;
+import maumnote.mano.global.security.JwtAuthenticationFilter;
+import maumnote.mano.global.security.MemberAuthenticationFilter;
+import maumnote.mano.service.NoteService;
 import maumnote.mano.service.NotebookService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,13 +30,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(NotebookController.class)
+@WebMvcTest(controllers = NotebookController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {JwtAuthenticationFilter.class, MemberAuthenticationFilter.class}))
 class NotebookControllerMockTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private NotebookService notebookService; // Mock 객체 주입
+    @MockBean
+    private NoteService noteService; // Mock 객체 주입
 
     @Test
     @DisplayName("일기장 저장 성공")

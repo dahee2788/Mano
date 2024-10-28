@@ -5,13 +5,14 @@
 이 프로젝트를 통해 사용자는 자신의 감정을 기록하고, 일기장을 통해 기분 변화를 쉽게 추적할 수 있습니다.
 
 ## TODO
-✅ redis를 이용한 securityUser 로그아웃 구현
 
-✅ OAuth2를 사용하여 socialMedia 회원가입/로그인 구현
+- [ ] redis를 이용한 securityUser 로그아웃 구현
 
-✅ 프로메테우스와 그라파나를 이용한 모니터링 추가
+- [ ] OAuth2를 사용하여 socialMedia 회원가입/로그인 구현
 
-✅ 상세한 기능 추가
+- [ ] 프로메테우스와 그라파나를 이용한 모니터링 추가
+
+- [ ] 상세한 기능 추가
 
    * 일기장 공유
    * 카프카를 이용해 일기 추가시, 공유자에게 알림
@@ -157,11 +158,13 @@ root/src
 
 1. 요청 데이터 역직렬화시 발생했던 문제
    > https://dev-heeya.tistory.com/44
-3. Springboot 3.xx의 기본 패키지 문제
+2. Springboot 3.xx의 기본 패키지 문제
    > https://dev-heeya.tistory.com/47
-5. SpringSecurity 도입 이후, Controller test 실패 문제
+3. SpringSecurity 도입 이후, Controller test 실패 문제
    > https://dev-heeya.tistory.com/51
-7. entity 간의 관계 정의 후, builer의 문제
+4. entity 간의 관계 정의 후, builer의 문제
    > https://dev-heeya.tistory.com/67
+5. AWS 배포 후 인스턴스가 멈추는 현상
+   > https://dev-heeya.tistory.com/76
 
   
